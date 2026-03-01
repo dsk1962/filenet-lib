@@ -67,15 +67,15 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.dkgeneric</groupId>
+			<artifactId>commons-lib</artifactId>
+			<version>[1.0.0,1.2.0)</version>
+		</dependency>
+		<dependency>
 			<groupId>com.ibm.filenet</groupId>
 			<artifactId>Jace</artifactId>
 			<version>5.5.9</version>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.dkgeneric</groupId>
-			<artifactId>commons-lib</artifactId>
-			<version>[1.0.0,1.2.0)</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.reload4j</groupId>
