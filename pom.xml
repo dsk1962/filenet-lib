@@ -127,7 +127,7 @@
 					<verbose>false</verbose>
 					<generateGitPropertiesFile>true</generateGitPropertiesFile>
 					<generateGitPropertiesFilename>
-						${project.build.outputDirectory}/com/dkgeneric/p8/config/git.properties</generateGitPropertiesFilename>
+						${project.build.outputDirectory}/com/dkgeneric/filenet/content/config/git.properties</generateGitPropertiesFilename>
 					<commitIdGenerationMode>full</commitIdGenerationMode>
 				</configuration>
 			</plugin>

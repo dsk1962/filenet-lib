@@ -32,7 +32,7 @@ import jakarta.annotation.PostConstruct;
 
 @Component
 @ConditionalOnProperty(name = "com.davita.ecm.p8.content.service.enabled", matchIfMissing = true)
-@PropertySource("classpath:/com/davita/ecm/p8/content/resources/p8default.properties")
+@PropertySource("classpath:/com/dkgeneric/filenet/content/resources/p8default.properties")
 public class ValidationService {
 
 	private final AppJsonConfigurationService configurationService;

@@ -35,7 +35,7 @@ public class ErrorMessages {
 	@PostConstruct
 	public void postConstruct() {
 		try (InputStream is = ErrorMessages.class
-				.getResourceAsStream("/com/davita/ecm/p8/content/resources/errormessages.properties")) {
+				.getResourceAsStream("/com/dkgeneric/filenet/content/resources/errormessages.properties")) {
 
 			if (is != null) {
 				Properties temp = new Properties();
@@ -43,7 +43,7 @@ public class ErrorMessages {
 				errorMessages.getProperties().putAll(temp);
 			}
 		} catch (IOException e) {
-			log.error("Failed to load /com/davita/ecm/p8/content/resources/errormessages.properties.", e);
+			log.error("Failed to load /com/dkgeneric/filenet/content/resources/errormessages.properties.", e);
 		}
 	}
 

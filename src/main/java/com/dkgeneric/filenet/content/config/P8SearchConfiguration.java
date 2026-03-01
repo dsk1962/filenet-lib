@@ -24,7 +24,7 @@ import lombok.Setter;
  */
 @Component("p8contentlibP8SearchConfiguration")
 @ConfigurationProperties(prefix = "p8contentlib")
-@PropertySource("${dva.ecm.cpe.searchconfigurationpath:classpath:com/davita/ecm/p8/content/resources/dummy.properties}")
+@PropertySource("${dva.ecm.cpe.searchconfigurationpath:classpath:com/dkgeneric/filenet/content/resources/dummy.properties}")
 public class P8SearchConfiguration {
 
 	public static final String P8_SEARCH_CONFIGURATION_KEY = "p8searchconfiguration";
