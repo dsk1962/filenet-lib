@@ -37,4 +37,14 @@ public class SearchParameters {
 	 * @return Current start page value
 	 */
 	private int startPage = 0;
+	
+	/**
+	 * Search time limit in seconds. This value will be used if {@link #getSearchTimeLimit()} &gt; 0
+	 * See OPTIONS (TIMELIMIT N) in filenet documentation
+	 * 
+	 * @param searchTimeLimit new search time limit
+	 * @return Current search time limit
+	 */
+	private int searchTimeLimit=-1;
+
 }

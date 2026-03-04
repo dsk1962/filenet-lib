@@ -175,6 +175,17 @@ public class ApplicationConfig {
 	private int maxResultSetSize;
 
 	/**
+	 * Default max result set size. Should be set through spring boot configuration
+	 * as @Value("${dva.ecm.cpe.maxresultsetsize:#{-1}}").
+	 * 
+	 * @param maxResultSetSize the new max result set size
+	 * @return Current max result set size
+	 */
+	@Getter
+	@Setter
+	private int searchTimeLimit=180;
+
+	/**
 	 * Default batch size. Should be set through spring boot configuration
 	 * as @Value("${dva.ecm.cpe.batchsize:#{100}}").
 	 * 
@@ -212,6 +223,7 @@ public class ApplicationConfig {
 			domainName = applicationConfig.getDomainName();
 		if (maxResultSetSize == -1)
 			maxResultSetSize = applicationConfig.getMaxResultSetSize();
+		searchTimeLimit = applicationConfig.getSearchTimeLimit();
 		if (!StringUtils.hasText(objectStoreName))
 			objectStoreName = applicationConfig.getObjectStoreName();
 		if (!populateDefaultSchemaOnStart)

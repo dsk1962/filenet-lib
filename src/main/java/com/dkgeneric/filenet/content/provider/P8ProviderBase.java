@@ -67,6 +67,8 @@ public class P8ProviderBase implements AutoCloseable {
 
 	protected int maxResultSetSize = -1;
 
+	protected int searchTimeLimit = -1;
+
 	protected BaseRequest baseRequest;
 
 	/**
@@ -160,8 +162,13 @@ public class P8ProviderBase implements AutoCloseable {
 			if (index >= 0)
 				query = query.substring(0, index + SELECT_CLAUSE.length()) + "TOP " + maxSize + " "
 						+ query.substring(index + SELECT_CLAUSE.length());
-			log.debug("createSearchSQL. Query: {}", query);
 		}
+		int timeLimit = searchParameters == null ? -1 : searchParameters.getSearchTimeLimit();
+		if (timeLimit <= 0)
+			timeLimit = searchTimeLimit;
+		if( timeLimit > 0 )
+			query += " OPTIONS (TIMELIMIT " + timeLimit + ")";
+		log.debug("createSearchSQL. Query: {}", query);
 		SearchSQL searchSQL = new SearchSQL();
 		searchSQL.setQueryString(query);
 		return searchSQL;

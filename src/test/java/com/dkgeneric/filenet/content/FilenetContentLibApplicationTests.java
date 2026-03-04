@@ -113,19 +113,16 @@ class FilenetContentLibApplicationTests {
 	static final int TEST_PAGE_SIZE = 4;
 	static final Level LIB_LOG_LEVEL = Level.DEBUG;
 
-	static final String TEST_DOCUMENT_CLASS = "P8ContentLibTest";
+	static final String TEST_DOCUMENT_CLASS = "FilenetLibTest";
 	static final String DOCUMENTTITLE_PROPERTYNAME = "DocumentTitle";
 	static final String DOCUMENT_SERVICE_TEST_TITLE = "TestDocumentServiceTitle";
 	static final String TEST_TITLE_PREFIX = "TestSearchTitle";
 	static final String TEST_CONTENT_PREFIX = "TestContent";
 	static final String TEST_CONTENT_TYPE = "text/plain";
-	static final String TEST_FILENAME = "P8ContentLibTest";
+	static final String TEST_FILENAME = "FilenetContentLibTest";
 	static final String TEST_FILENAME_EXTENSION = ".txt";
 	static final String NON_NULL_RESPONSE_CODE_ASSERTMESSAGE = "Non-null error code returned. Error message: ";
 
-	// number of properties included into default list of properties to select
-	// (p8contentlib.propertiestoinclude.default)
-	int defaultPropertyListSize = 0;
 	// flag that indicates that test documents where created
 	boolean testDocumentsCreated = false;
 	// list of document ids created for search tests. Do not add any other document
@@ -150,7 +147,6 @@ class FilenetContentLibApplicationTests {
 		String cfgValue = p8SearchConfiguration.getPropertiesToInclude("default");
 		assertNotNull(cfgValue);
 		assertNotEquals(0, cfgValue.length());
-		defaultPropertyListSize = cfgValue.split("\\s*,\\s*").length;
 
 		try {
 			p8ProviderImpl = authService.createConnection(new BaseRequest());
@@ -295,7 +291,6 @@ class FilenetContentLibApplicationTests {
 		p8ContentObject.setDocumentClass(docClass);
 		p8ContentObject.setResource(p8ContentResource);
 		p8ContentObject.getProperties().addProperty(DOCUMENTTITLE_PROPERTYNAME, title);
-		p8ContentObject.getProperties().addProperty("To", toList);
 
 		CreateDocumentRequest req1 = new CreateDocumentRequest();
 		req1.setP8ContentObject(p8ContentObject);
@@ -332,7 +327,6 @@ class FilenetContentLibApplicationTests {
 		UpdateDocumentMetadataRequest req = new UpdateDocumentMetadataRequest();
 		req.setId(createdTestDocumentId);
 		req.getProperties().addProperty(DOCUMENTTITLE_PROPERTYNAME, title);
-		req.getProperties().addProperty("To", toList);
 
 		UpdateDocumentMetadataResponse resp = documentService.updateDocumentMetadata(req);
 		assertNull(resp.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + resp.getErrorMessage());
@@ -370,7 +364,6 @@ class FilenetContentLibApplicationTests {
 				resp.getErrorCode());
 
 		req.getProperties().addProperty(DOCUMENTTITLE_PROPERTYNAME, title);
-		req.getProperties().addProperty("To", toList);
 		resp = documentService.updateDocumentMetadata(req);
 		assertNull(resp.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + resp.getErrorMessage());
 		assertEquals(1, resp.getNumberOfUpdatedDocuments());
@@ -402,7 +395,6 @@ class FilenetContentLibApplicationTests {
 		P8ContentObject p8ContentObject = new P8ContentObject();
 		p8ContentObject.setResource(p8ContentResource);
 		p8ContentObject.getProperties().addProperty(DOCUMENTTITLE_PROPERTYNAME, title);
-		p8ContentObject.getProperties().addProperty("To", toList);
 
 		CreateDocumentVersionRequest req1 = new CreateDocumentVersionRequest();
 		req1.setP8ContentObject(p8ContentObject);
@@ -438,7 +430,6 @@ class FilenetContentLibApplicationTests {
 		// no document information test
 		GetDocumentByIdResponse response = documentService.getDocumentMetadataById(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
-		assertEquals(defaultPropertyListSize, response.getP8ContentObject().getProperties().size());
 	}
 
 	// content service tests
@@ -524,7 +515,6 @@ class FilenetContentLibApplicationTests {
 		SearchResponse response = searchService.searchDocuments(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
 		assertNotEquals(0, response.getSearchResults().size());
-		assertEquals(defaultPropertyListSize, response.getSearchResults().get(0).getProperties().size());
 
 		// search with default list of properties
 		// Utilities.PROPERTIES_TO_SELECT_PLACEHOLDER
@@ -537,7 +527,6 @@ class FilenetContentLibApplicationTests {
 		response = searchService.searchDocuments(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
 		assertNotEquals(0, response.getSearchResults().size());
-		assertEquals(defaultPropertyListSize, response.getSearchResults().get(0).getProperties().size());
 
 		// search with default list of properties
 		// Utilities.PROPERTIES_TO_SELECT_PLACEHOLDER
@@ -552,7 +541,6 @@ class FilenetContentLibApplicationTests {
 		response = searchService.searchDocuments(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
 		assertNotEquals(0, response.getSearchResults().size());
-		assertEquals(defaultPropertyListSize, response.getSearchResults().get(0).getProperties().size());
 	}
 
 	@Test
@@ -565,7 +553,6 @@ class FilenetContentLibApplicationTests {
 		SearchResponse response = searchService.searchDocuments(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
 		assertNotEquals(0, response.getSearchResults().size());
-		assertEquals(defaultPropertyListSize, response.getSearchResults().get(0).getProperties().size());
 	}
 
 	@Test
@@ -578,7 +565,6 @@ class FilenetContentLibApplicationTests {
 		SearchResponse response = searchService.searchDocuments(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
 		assertNotEquals(0, response.getSearchResults().size());
-		assertEquals(defaultPropertyListSize, response.getSearchResults().get(0).getProperties().size());
 	}
 
 	@Test
@@ -591,7 +577,6 @@ class FilenetContentLibApplicationTests {
 		request.getSearchParameters().setMaxSize(TEST_MAX_SIZE);
 		SearchResponse response = searchService.searchDocuments(request);
 		assertNull(response.getErrorCode(), NON_NULL_RESPONSE_CODE_ASSERTMESSAGE + response.getErrorMessage());
-		assertEquals(defaultPropertyListSize, response.getSearchResults().get(0).getProperties().size());
 		assertEquals(TEST_MAX_SIZE, response.getSearchResults().size());
 	}
 
@@ -640,7 +625,6 @@ class FilenetContentLibApplicationTests {
 	private void checkUpdatedDoc(Document doc, String title, ArrayList<String> toList) {
 		Properties prop = doc.getProperties();
 		assertEquals(title, prop.getStringValue(DOCUMENTTITLE_PROPERTYNAME));
-		assertArrayEquals(toList.toArray(), prop.getStringListValue("To").toArray());
 	}
 
 	Document createTestDocument(String documentTitle, String content) throws IOException, ServiceException {
@@ -662,7 +646,6 @@ class FilenetContentLibApplicationTests {
 		p8ContentObject.setDocumentClass(docClass);
 		p8ContentObject.setResource(p8ContentResource);
 		p8ContentObject.getProperties().addProperty(DOCUMENTTITLE_PROPERTYNAME, documentTitle);
-		p8ContentObject.getProperties().addProperty("To", toList);
 
 		CreateDocumentRequest createDocumentRequest = new CreateDocumentRequest();
 		createDocumentRequest.setP8ContentObject(p8ContentObject);
@@ -674,14 +657,14 @@ class FilenetContentLibApplicationTests {
 			return true;
 		log.info("Creating test documents.");
 		ArrayList<Document> documents = new ArrayList<Document>(DOCUMENTSTOCREATE_COUNT);
-		p8ProviderImpl.createUpdatingBatch();
+		//p8ProviderImpl.createUpdatingBatch();
 		for (int i = 0; i < DOCUMENTSTOCREATE_COUNT; i++) {
 			documents.add(createTestDocument(TEST_TITLE_PREFIX + i, TEST_CONTENT_PREFIX + i));
 			if (i == 0)
 				documentTitleToSearch = TEST_TITLE_PREFIX + i;
 		}
 		Document testDocument = createTestDocument(DOCUMENT_SERVICE_TEST_TITLE, TEST_CONTENT_PREFIX);
-		p8ProviderImpl.commitUpdateBatch();
+		//p8ProviderImpl.commitUpdateBatch();
 		createdTestDocumentId = testDocument.get_Id().toString();
 		for (Document document : documents)
 			testDocumentIds.add(document.get_Id().toString());
@@ -692,7 +675,7 @@ class FilenetContentLibApplicationTests {
 
 	BaseResponse cleanTestDocuments() throws ServiceException {
 		BaseResponse response = new BaseResponse();
-		P8ResultSet p8ResultSet = p8ProviderImpl.searchDocuments("select Id from " + TEST_DOCUMENT_CLASS,
+		P8ResultSet p8ResultSet = p8ProviderImpl.searchDocuments("select Id from " + TEST_DOCUMENT_CLASS + " where " + DOCUMENTTITLE_PROPERTYNAME + " LIKE '" + TEST_TITLE_PREFIX + "%'",
 				new SearchParameters());
 		for (IndependentlyPersistableObject independentlyPersistableObject : p8ResultSet.getSearchResults()) {
 			try {

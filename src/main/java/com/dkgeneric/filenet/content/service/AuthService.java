@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  * Instantiates a new auth service.
  */
 @Component("p8contentlibAuthService")
-@DependsOn("AppJsonConfigurationService")
+@DependsOn("appJsonConfigurationService")
 @ConditionalOnProperty(name = "com.davita.ecm.p8.content.service.enabled", matchIfMissing = true)
 
 /** The Constant log. */

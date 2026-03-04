@@ -161,6 +161,7 @@ public class P8ProviderImpl extends P8ProviderBase {
 	public P8ProviderImpl(AuthService authService, String userName, String password) throws ServiceException {
 		this.authService = authService;
 		maxResultSetSize = authService.getClientConfig().getMaxResultSetSize();
+		searchTimeLimit = authService.getClientConfig().getSearchTimeLimit();
 		connection = this.authService.getConnection(userName, password);
 	}
 
@@ -815,8 +816,10 @@ public class P8ProviderImpl extends P8ProviderBase {
 			if (index >= 0)
 				query = query.substring(0, index + SELECT_CLAUSE.length()) + "TOP " + maxSize + " "
 						+ query.substring(index + SELECT_CLAUSE.length());
-			log.debug("searchDocument. Query: {}", query);
 		}
+		if( searchTimeLimit > 0 )
+			query += " OPTIONS (TIMELIMIT " + searchTimeLimit + ")";
+		log.debug("searchDocument. Query: {}", query);
 		SearchSQL searchSQL = new SearchSQL();
 		searchSQL.setQueryString(query);
 		long start = System.currentTimeMillis();

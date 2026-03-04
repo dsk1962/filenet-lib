@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 /**
  * The base spring boot class
  */
-@SpringBootApplication(scanBasePackages = { "com.davita.ecm.*" })
+@SpringBootApplication(scanBasePackages = { "com.dkgeneric.*" })
 public class FilenetContentLibApplication {
 
 	/**
