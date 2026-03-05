@@ -465,10 +465,15 @@ public class Utilities {
 			setResponseErrors(baseResponse, se.getExceptionCode(), se.getParameters());
 		else {
 			if (e instanceof EngineRuntimeException ere) {
+				System.out.println("Code: " + ere.getExceptionCode().getErrorId() + " / " +ere.getExceptionCode().getId() );
 				if (ere.getExceptionCode() == ExceptionCode.E_OBJECT_NOT_FOUND && StringUtils.hasText(docId))
 					setResponseErrors(baseResponse,
 							GeneralExceptionCodes.DOCUMENT_NOT_FOUND_BY_ID_EXCEPTION.getExceptionCode(),
 							new Object[] { docId });
+				else if (ere.getExceptionCode() == ExceptionCode.DB_ERROR && ere.getMessage() != null && ere.getMessage().indexOf("ORA-01013") > 0)
+					setResponseErrors(baseResponse,
+							"p8contentlib.p8exception.engineruntimedbexceptionthrown",
+							new Object[] { ere.getExceptionCode().getErrorId(), ere.getMessage() });
 				else {
 					String exceptionCode = ere.getExceptionCode() == null ? "None"
 							: ere.getExceptionCode().getErrorId();
