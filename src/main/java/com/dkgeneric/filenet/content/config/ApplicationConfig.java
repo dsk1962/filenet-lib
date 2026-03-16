@@ -175,15 +175,14 @@ public class ApplicationConfig {
 	private int maxResultSetSize;
 
 	/**
-	 * Default max result set size. Should be set through spring boot configuration
-	 * as @Value("${dva.ecm.cpe.maxresultsetsize:#{-1}}").
+	 * Default search time limit in seconds, Will be added to query like  OPTIONS(TIMELIMIT 300) 
 	 * 
-	 * @param maxResultSetSize the new max result set size
-	 * @return Current max result set size
+	 * @param searchTimeLimit the new search time limit
+	 * @return Current search time limit
 	 */
 	@Getter
 	@Setter
-	private int searchTimeLimit=180;
+	private int searchTimeLimit=300;
 
 	/**
 	 * Default batch size. Should be set through spring boot configuration
