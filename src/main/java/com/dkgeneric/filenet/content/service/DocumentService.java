@@ -44,20 +44,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DocumentService extends AuthorizationBasedService {
 
-	private final DavitaCopyPostProcessor davitaCopyPostProcessor;
-
-	public DocumentService(DavitaCopyPostProcessor davitaCopyPostProcessor,
+	public DocumentService(
 			@Qualifier("p8contentlibAuthService") AuthService authService,
 			@Qualifier("p8ContentLibConfig") ApplicationConfig clientConfig,
 			@Qualifier("p8contentlibUtilities") Utilities utilities, ValidationService validationService) {
 		super(authService, clientConfig, utilities, validationService);
-		this.davitaCopyPostProcessor = davitaCopyPostProcessor;
 	}
 
 	public CopyDocumentResponse copyDavitaDocument(CopyDocumentRequest copyDocumentRequest,
 			P8ContentObjectAuditInfo auditInfo) throws ServiceException {
-		if (copyDocumentRequest.getCopyPostProcessor() == null)
-			copyDocumentRequest.setCopyPostProcessor(davitaCopyPostProcessor);
 		return copyDocument(copyDocumentRequest, auditInfo);
 	}
 

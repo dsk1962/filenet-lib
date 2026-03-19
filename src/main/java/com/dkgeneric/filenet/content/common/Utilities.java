@@ -128,7 +128,8 @@ public class Utilities {
 						.append(' ');
 				// Check if operation is not IS NULL or NOT IS NULL
 				if (searchCondition.getOperation().toUpperCase().indexOf("NULL") < 0) {
-					if (searchCondition.isStringCondition() && !searchCondition.getOperation().toUpperCase().contains("IN"))
+					if (searchCondition.isStringCondition()
+							&& !searchCondition.getOperation().toUpperCase().contains("IN"))
 						filter.append("'").append(searchCondition.getSearchValue()).append("'");
 					else
 						filter.append(searchCondition.getSearchValue());
@@ -205,22 +206,19 @@ public class Utilities {
 		validatIndexedPropertyPresence(jsonSearch, query, p8ProviderImpl);
 		if (jsonSearch.isCurrentVersionOnly())
 			query.append(AND_JOIN).append(ECMConstants.P8_IS_CURRENT_VERSION).append(" = true ");
-		if (jsonSearch.isActiveDocumentsOnly())
-			query.append(AND_JOIN).append(ECMConstants.DVA_AVAILABILITYSTATUS_PROPERTYNAME).append(" = '")
-					.append(ECMConstants.DVA_AVAILABILITY_STATUS_ACTIVE).append("'");
 		processSortBy(jsonSearch, query);
 		return query.toString();
 	}
 
 	private void validatIndexedPropertyPresence(JsonSearch jsonSearch, StringBuilder query,
 			P8ProviderImpl p8ProviderImpl) throws ServiceException, ParseException {
-		boolean hasIndexedProperty = false;
+		boolean hasIndexedProperty = applicationConfig.getIndexedProperties().contains("*");
 		for (int i = 0; i < jsonSearch.getSearchFilter().size(); i++) {
 			JsonSearchCondition jsc = jsonSearch.getSearchFilter().get(i);
 			processSearchCondition(jsc, query, p8ProviderImpl, i == jsonSearch.getSearchFilter().size() - 1);
 			if (!hasIndexedProperty)
-				hasIndexedProperty = !CollectionUtils.isEmpty(applicationConfig.getIndexedProperties())
-						&& applicationConfig.getIndexedProperties().contains(jsc.getPropertyName());
+				hasIndexedProperty = applicationConfig.getIndexedProperties().stream()
+						.anyMatch(str -> str.equalsIgnoreCase(jsc.getPropertyName()));
 		}
 		if (!hasIndexedProperty)
 			throw new ServiceException(SearchServiceExceptionCodes.MISSING_INDEXED_PROPERTY.getExceptionCode(),
@@ -371,7 +369,8 @@ public class Utilities {
 			throw new ServiceException(SearchServiceExceptionCodes.DATE_SEARCH_CARDINALTY.getExceptionCode(),
 					(Object) condition.getPropertyName());
 		conditions.append(" " + condition.getPrefix());
-		conditions.append('(').append(condition.getPropertyName()).append(" >= ").append(dateInterval[0]).append(AND_JOIN);
+		conditions.append('(').append(condition.getPropertyName()).append(" >= ").append(dateInterval[0])
+				.append(AND_JOIN);
 		conditions.append(condition.getPropertyName()).append(" < ").append(dateInterval[1]).append(')');
 	}
 
@@ -465,14 +464,15 @@ public class Utilities {
 			setResponseErrors(baseResponse, se.getExceptionCode(), se.getParameters());
 		else {
 			if (e instanceof EngineRuntimeException ere) {
-				System.out.println("Code: " + ere.getExceptionCode().getErrorId() + " / " +ere.getExceptionCode().getId() );
+				System.out.println(
+						"Code: " + ere.getExceptionCode().getErrorId() + " / " + ere.getExceptionCode().getId());
 				if (ere.getExceptionCode() == ExceptionCode.E_OBJECT_NOT_FOUND && StringUtils.hasText(docId))
 					setResponseErrors(baseResponse,
 							GeneralExceptionCodes.DOCUMENT_NOT_FOUND_BY_ID_EXCEPTION.getExceptionCode(),
 							new Object[] { docId });
-				else if (ere.getExceptionCode() == ExceptionCode.DB_ERROR && ere.getMessage() != null && ere.getMessage().indexOf("ORA-01013") > 0)
-					setResponseErrors(baseResponse,
-							"p8contentlib.p8exception.engineruntimedbexceptionthrown",
+				else if (ere.getExceptionCode() == ExceptionCode.DB_ERROR && ere.getMessage() != null
+						&& ere.getMessage().indexOf("ORA-01013") > 0)
+					setResponseErrors(baseResponse, "p8contentlib.p8exception.engineruntimedbexceptionthrown",
 							new Object[] { ere.getExceptionCode().getErrorId(), ere.getMessage() });
 				else {
 					String exceptionCode = ere.getExceptionCode() == null ? "None"

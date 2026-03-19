@@ -46,7 +46,6 @@ import com.filenet.api.core.Containable;
 import com.filenet.api.core.ContentTransfer;
 import com.filenet.api.core.CustomObject;
 import com.filenet.api.core.Document;
-import com.filenet.api.core.EngineObject;
 import com.filenet.api.core.Factory;
 import com.filenet.api.core.IndependentObject;
 import com.filenet.api.core.IndependentlyPersistableObject;
@@ -515,7 +514,7 @@ public class P8ProviderImpl extends P8ProviderBase {
 		else if (filenetObject instanceof Annotation a)
 			list = a.get_ContentElements();
 		if (CollectionUtils.isEmpty(list))
-			return isLinkObject ? null : getLinkedContentResource(filenetObject);
+			return null;
 		for (Object o : list) {
 			if (o instanceof ContentTransfer contentTransfer) {
 				P8ContentResource result = new P8ContentResource();
@@ -560,13 +559,7 @@ public class P8ProviderImpl extends P8ProviderBase {
 			propertyFilter.addIncludeProperty(
 					new FilterElement(null, null, null, StringUtils.replace(propertyCSVList, ",", " "), null));
 		}
-		CustomObject document = Factory.CustomObject.fetchInstance(getConnectionObjectStore(), new Id(customObjectId),
-				propertyFilter);
-		if (document.getProperties().isPropertyPresent(ECMConstants.DVA_AVAILABILITYSTATUS_PROPERTYNAME)
-				&& !ECMConstants.DVA_AVAILABILITY_STATUS_ACTIVE.equalsIgnoreCase(
-						document.getProperties().getStringValue(ECMConstants.DVA_AVAILABILITYSTATUS_PROPERTYNAME)))
-			return null;
-		return document;
+		return Factory.CustomObject.fetchInstance(getConnectionObjectStore(), new Id(customObjectId), propertyFilter);
 	}
 
 	/**
@@ -595,33 +588,7 @@ public class P8ProviderImpl extends P8ProviderBase {
 			propertyFilter.addIncludeProperty(
 					new FilterElement(null, null, null, StringUtils.replace(propertyCSVList, ",", " "), null));
 		}
-		Document document = Factory.Document.fetchInstance(getConnectionObjectStore(), new Id(docId), propertyFilter);
-		if (document.getProperties().isPropertyPresent(ECMConstants.DVA_AVAILABILITYSTATUS_PROPERTYNAME)
-				&& !ECMConstants.DVA_AVAILABILITY_STATUS_ACTIVE.equalsIgnoreCase(
-						document.getProperties().getStringValue(ECMConstants.DVA_AVAILABILITYSTATUS_PROPERTYNAME)))
-			return null;
-		return document;
-	}
-
-	/**
-	 * Gets the liked document (referenced by ECMConstants.DVA_LINKTOCONTENT_PROPERTYNAME property) content resource information.
-	 *
-	 * @param filenetObject the FileNet IndependentlyPersistableObject
-	 * @return the content resource
-	 */
-	private P8ContentResource getLinkedContentResource(IndependentlyPersistableObject filenetObject) {
-		// Check if property was retrieved
-		if (!filenetObject.getProperties().isPropertyPresent(ECMConstants.DVA_LINKTOCONTENT_PROPERTYNAME))
-			filenetObject.fetchProperties(new String[] { ECMConstants.DVA_LINKTOCONTENT_PROPERTYNAME });
-		if (!filenetObject.getProperties().isPropertyPresent(ECMConstants.DVA_LINKTOCONTENT_PROPERTYNAME))
-			return null;
-		EngineObject engineObject = filenetObject.getProperties()
-				.getEngineObjectValue(ECMConstants.DVA_LINKTOCONTENT_PROPERTYNAME);
-		if (engineObject != null && engineObject instanceof IndependentlyPersistableObject ipo) {
-			ipo.refresh((PropertyFilter) null);
-			return getContentResourceExtended(ipo, true);
-		}
-		return null;
+		return Factory.Document.fetchInstance(getConnectionObjectStore(), new Id(docId), propertyFilter);
 	}
 
 	/**
@@ -817,7 +784,7 @@ public class P8ProviderImpl extends P8ProviderBase {
 				query = query.substring(0, index + SELECT_CLAUSE.length()) + "TOP " + maxSize + " "
 						+ query.substring(index + SELECT_CLAUSE.length());
 		}
-		if( searchTimeLimit > 0 )
+		if (searchTimeLimit > 0)
 			query += " OPTIONS (TIMELIMIT " + searchTimeLimit + ")";
 		log.debug("searchDocument. Query: {}", query);
 		SearchSQL searchSQL = new SearchSQL();

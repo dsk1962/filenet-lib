@@ -255,8 +255,7 @@ public class MappingService extends BaseService {
 		if (!StringUtils.hasText(className))
 			className = applicationConfig.getResourceTypeMapping().get("default");
 		if (!StringUtils.hasText(className))
-			throw new ServiceException(MappingServiceExceptionCodes.NO_DOCCLASS_MAPPING_EXCEPTION.getExceptionCode(),
-					(Object) jsonResource.getResourceType());
+			className = jsonResource.getResourceType();
 		result.setDocumentClass(className);
 		if (!CollectionUtils.isEmpty(jsonSearch.getPropertiesToRetrieve())) {
 			List<String> propertiesToRetrieve = new ArrayList<>(jsonSearch.getPropertiesToRetrieve().size());
