@@ -9,7 +9,7 @@
 	</parent>
 	<groupId>com.dkgeneric</groupId>
 	<artifactId>filenet-lib</artifactId>
-	<version>1.0.7</version>
+	<version>1.0.8</version>
 	<name>filenet-lib</name>
 	<description>Java library project for p8 content operations</description>
 	<properties>
