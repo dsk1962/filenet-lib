@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ContentService extends AuthorizationBasedService {
 
 	// Regex pattern for P8 guid format
-	private static final String P8_UUID_REGEX = "\\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\}";
+	private static final String P8_UUID_REGEX = "(\\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\})|([a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12})";
 	private static final Pattern P8_UUID_PATTERN = Pattern.compile(P8_UUID_REGEX);
 
 	@ApplicationValue(key = "nonGuidValueSQL")
