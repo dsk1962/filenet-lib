@@ -37,7 +37,7 @@ public class ContentService extends AuthorizationBasedService {
 	private static final Pattern P8_UUID_PATTERN = Pattern.compile(P8_UUID_REGEX);
 
 	@ApplicationValue(key = "nonGuidValueSQL")
-	private String nonGuidValueSQL = "SELECT Id,ContentElements FROM Document WHERE DVALegacyRepositoryDocId = '*REALVALUE*' AND DVAAvailabilityStatus = 'Active' AND IsCurrentVersion=true";
+	private String nonGuidValueSQL = null;
 
 	public ContentService(@Qualifier("p8contentlibAuthService") AuthService authService,
 			@Qualifier("p8ContentLibConfig") ApplicationConfig clientConfig,
@@ -61,10 +61,11 @@ public class ContentService extends AuthorizationBasedService {
 			if (StringUtils.hasText(request.getDocumentId())) {
 				if (P8_UUID_PATTERN.matcher(request.getDocumentId()).matches())
 					document = p8ProviderImpl.getDocumentById(request.getDocumentId());
-				else {
+				else if (StringUtils.hasText(nonGuidValueSQL)) {
 					log.debug("Non guid value provided, Use search. Value: {}", request.getDocumentId());
 					String searchValue = StringUtils.replace(request.getDocumentId(), "'", "''");
-					document = p8ProviderImpl.searchDocument(StringUtils.replace(nonGuidValueSQL, "*REALVALUE*", searchValue));
+					document = p8ProviderImpl
+							.searchDocument(StringUtils.replace(nonGuidValueSQL, "*REALVALUE*", searchValue));
 				}
 			} else
 				document = p8ProviderImpl
